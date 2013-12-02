@@ -1,0 +1,5 @@
+#!/bin/env ruby
+
+runner = Randserver::Runner.new
+runner.run
+
