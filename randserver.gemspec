@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Randserver::VERSION
   spec.authors       = ["Jeffrey Hulten"]
   spec.email         = ["jhulten@whitepages.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Generates Random Numbers}
+  spec.summary       = %q{Generate lots of random numbers}
   spec.homepage      = ""
   spec.license       = "MIT"
 
