@@ -1,0 +1,7 @@
+#cloud-config
+packages:
+ - ruby1.9.3
+ - bundler
+
+runcmd:
+ - 
