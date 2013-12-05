@@ -1,7 +1,12 @@
 #cloud-config
 packages:
  - ruby1.9.3
- - bundler
+ - git
+ - build-essential
 
 runcmd:
- - 
+ - /usr/bin/gem install bundler
+ - /usr/bin/git clone "https://github.com/whitepages/scaledemo-20-machines.git" /opt/randserver
+ - cd /opt/randserver && /usr/local/bin/bundle install
+ - cd /opt/randserver && /usr/local/bin/bundle exec randserver &
+

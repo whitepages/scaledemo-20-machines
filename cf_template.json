@@ -15,19 +15,9 @@
         "m1.medium",
         "m1.large",
         "m1.xlarge"
-      ],
-      "Default": "m1.small",
-      "ConstraintDescription": "must be a valid EC2 instance type."
-    },
-    "RiemannServerAddr": {
-      "Default": "127.0.0.1",
-      "Type": "String",
-      "Description": "The TCP address for the Riemann Server"
-    },
-    "RiemannServerPort": {
-      "Default": "5555",
-      "Type": "Number",
-      "Description": "The TCP port for the Riemann Server"
+        ],
+        "Default": "m1.small",
+        "ConstraintDescription": "must be a valid EC2 instance type."
     },
     "KeyName": {
       "Type": "String",
@@ -84,7 +74,7 @@
               "Ref": "OperatorEmail"
             }
           }
-        ]
+              ]
       }
     },
     "RandLaunchConfig": {
@@ -92,25 +82,27 @@
       "Properties": {
         "SecurityGroups": [
           { "Ref": "InstanceSecurityGroup" }
-        ],
-        "InstanceType": { "Ref": "InstanceType" },
-        "KeyName": { "Ref": "KeyName" },
-        "UserData": {
-          "Fn::Base64": { "Ref": "RiemannServerPort" }
-        },
-        "ImageId": {
-          "Fn::FindInMap": [
-            "AWSRegionArch2AMI",
-            { "Ref": "AWS::Region" },
-            {
-              "Fn::FindInMap": [
-                "AWSInstanceType2Arch",
-                { "Ref": "InstanceType" },
-                "Arch"
-              ]
-            }
-          ]
-        }
+              ],
+              "InstanceType": { "Ref": "InstanceType" },
+              "KeyName": { "Ref": "KeyName" },
+              "UserData": {
+                "Fn::Base64": { "Fn::Join" : ["",[
+                  "#include\n",
+                  "https://s3.amazonaws.com/wp-meetup-demos/seascale-2013-12/cloud-config.txt\n"
+                  ]]}},
+                  "ImageId": {
+                    "Fn::FindInMap": [
+                      "AWSRegionArch2AMI",
+                      { "Ref": "AWS::Region" },
+                      {
+                        "Fn::FindInMap": [
+                          "AWSInstanceType2Arch",
+                          { "Ref": "InstanceType" },
+                          "Arch"
+                        ]
+                      }
+                        ]
+                  }
       }
     },
     "InstanceSecurityGroup": {
@@ -124,7 +116,7 @@
             "ToPort": "22",
             "IpProtocol": "tcp"
           }
-        ]
+            ]
       }
     },
     "RandServerGroup": {
@@ -133,18 +125,30 @@
         "AvailabilityZones": {
           "Fn::GetAZs": ""
         },
-        "NotificationConfiguration": {
-          "NotificationTypes": [
-            "autoscaling:EC2_INSTANCE_LAUNCH",
-            "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
-            "autoscaling:EC2_INSTANCE_TERMINATE",
-            "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+        "Tags" : [ 
+          {
+            "Key" : "Name",
+            "Value" : "RandServer",
+            "PropagateAtLaunch" : true
+          }, 
+          {
+            "Key" : "Owner",
+            "Value" : "jhulten@whitepages.com",
+            "PropagateAtLaunch" : true
+          }
           ],
-          "TopicARN": { "Ref": "NotificationTopic" }
-        },
-        "MinSize": "1",
-        "MaxSize": "100",
-        "LaunchConfigurationName": { "Ref": "RandLaunchConfig" }
+          "NotificationConfiguration": {
+            "NotificationTypes": [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+              ],
+              "TopicARN": { "Ref": "NotificationTopic" }
+          },
+          "MinSize": "1",
+          "MaxSize": "100",
+          "LaunchConfigurationName": { "Ref": "RandLaunchConfig" }
       }
     }
   }
